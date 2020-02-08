@@ -7,14 +7,14 @@
 #define DEFAULT_S_H 10
 #define SNAKE_SPEED 20
 
-enum {
+enum key_e{
     UP,
     DOWN,
     RIGHT,
     LEFT,
 
     KEYS_ALL
-} keys;
+};
 
 class csnake
 {
@@ -28,7 +28,7 @@ class csnake
         int snake_w;
         int snake_h;
 
-        int keys[KEYS_ALL] = {0};
+        int keys[KEYS_ALL];
     public:
         csnake();
         csnake(int w, int h);
@@ -36,6 +36,7 @@ class csnake
         int move(SDL_Renderer *renderer);
         int load(std::string path, SDL_Renderer *renderer);
         void handle_event(SDL_Event& e);
+        void debug_values(void);
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "snake.h"
 #include "../common.h"
+#include <string.h>
 
 csnake::csnake()
 {
@@ -8,6 +9,10 @@ csnake::csnake()
     ypos = 0;
     snake_w = DEFAULT_S_W;
     snake_h = DEFAULT_S_H;
+    keys[LEFT] = 0;
+    keys[RIGHT] = 0;
+    keys[UP] = 0;
+    keys[DOWN] = 0;
 }
 
 csnake::csnake(int w, int h)
@@ -17,6 +22,14 @@ csnake::csnake(int w, int h)
     ypos = 0;
     snake_w = w;
     snake_h = h;
+    keys[LEFT] = 0;
+    keys[RIGHT] = 0;
+    keys[UP] = 0;
+    keys[DOWN] = 0;
+    printf("init\n");
+    printf("keys: L=%d, R=%d, U=%d, D=%d\n", keys[LEFT], keys[RIGHT], keys[UP], keys[DOWN]);
+    printf("init\n");
+
 }
 
 csnake::~csnake()
@@ -60,7 +73,6 @@ void csnake::handle_event( SDL_Event& e )
         }
     }
 
-    printf("handle event-> x=%d, y=%d\n", xpos, ypos);
     if (xpos + snake_w >= SCREEN_WIDTH) {
         xpos = SCREEN_WIDTH - snake_w;
     }
@@ -76,16 +88,9 @@ void csnake::handle_event( SDL_Event& e )
     if (ypos < 0) {
         ypos = 0;
     }
-    // //If a key was released
-    // else if( e.type == SDL_KEYUP && e.key.repeat == 0 )
-    // {
-    //     //Adjust the velocity
-    //     switch( e.key.keysym.sym )
-    //     {
-    //         case SDLK_UP: ypos += SNAKE_SPEED; break;
-    //         case SDLK_DOWN: ypos -= SNAKE_SPEED; break;
-    //         case SDLK_LEFT: xpos += SNAKE_SPEED; break;
-    //         case SDLK_RIGHT: xpos -= SNAKE_SPEED; break;
-    //     }
-    // }
+}
+
+void csnake::debug_values(void)
+{
+        printf("PRINT keys: L=%d, R=%d, U=%d, D=%d\n", keys[LEFT], keys[RIGHT], keys[UP], keys[DOWN]);
 }

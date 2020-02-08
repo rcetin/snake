@@ -87,12 +87,8 @@ int main(void)
             if(e.type == SDL_QUIT) {
                 quit = true;
             }
-
-            //Handle input for the dot
             snake.handle_event(e);
         }
-
-        //Move the dot
 
         //Clear screen
         SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);

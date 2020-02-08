@@ -13,3 +13,6 @@ OBJ_NAME = snake
 
 all : $(OBJS)
 	$(CC) $(OBJS) $(CFLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+
+clean:
+	rm $(OBJ_NAME)

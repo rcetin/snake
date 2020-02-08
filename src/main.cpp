@@ -16,7 +16,6 @@ static int snake_init(SDL_Window **w, SDL_Renderer **r)
         printf("SDL init failed\n");
         return -1;
     }
-    printf("SDL init success\n");
 
     *w = SDL_CreateWindow("Snake",
         SDL_WINDOWPOS_UNDEFINED,
@@ -91,7 +90,7 @@ int main(void)
         }
 
         //Clear screen
-        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(renderer);
 
         snake.move(renderer);

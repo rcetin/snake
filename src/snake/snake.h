@@ -5,7 +5,10 @@
 
 #define DEFAULT_S_W 10
 #define DEFAULT_S_H 10
-#define SNAKE_SPEED 20
+#define SNAKE_SPEED 10
+#define FPS 60
+#define FPS_DIV 6
+#define FPS_THR (FPS / FPS_DIV)
 
 enum key_e{
     UP,
@@ -29,6 +32,8 @@ class csnake
         int snake_h;
 
         int keys[KEYS_ALL];
+
+        int move_cnt;
     public:
         csnake();
         csnake(int w, int h);

@@ -1,5 +1,5 @@
 CC = g++
-OBJS = src/main.o src/snake/snake.o
+OBJS = src/main.o src/snake/snake.o src/texture/texture.o
 CFLAGS = -Wall \
 	-std=c++11
 

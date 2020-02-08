@@ -5,8 +5,8 @@
 
 #include <string>
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#include "snake/snake.h"
+#include "common.h"
 
 static int snake_init(SDL_Window **w, SDL_Renderer **r)
 {
@@ -54,22 +54,13 @@ bail:
 static SDL_Texture *load_png(std::string path, SDL_Renderer *renderer)
 {
 	SDL_Texture *n_texture = NULL;
-
-	SDL_Surface *loaded_surface = IMG_Load(path.c_str());
-    if (loaded_surface == NULL) {
-        printf("image load is failed for=%s, %s\n", path.c_str(),
-            IMG_GetError());
-        return NULL;
-    }
-
-    n_texture = SDL_CreateTextureFromSurface(renderer, loaded_surface);
+    n_texture = IMG_LoadTexture(renderer, path.c_str());
     if (n_texture == NULL) {
         printf("create texture is failed for=%s, %s\n", path.c_str(),
             IMG_GetError());
         return NULL;
     }
 
-    SDL_FreeSurface(loaded_surface);
     return n_texture;
 }
 
@@ -77,26 +68,41 @@ int main(void)
 {
     SDL_Window *window = NULL;
     SDL_Renderer* renderer = NULL;
-    SDL_Texture *tx = NULL;
-    SDL_Rect *rect;
+    csnake snake(20, 20);
+    int quit = 0;
+    SDL_Event e;
+
     if (snake_init(&window, &renderer)) {
         printf("error snake init\n");
         goto bail;
     }
 
-    tx = load_png("/home/rcetin/workspace/programming/sdl/snake/src/foo.png", renderer);
-    if (tx == NULL) {
+    if (snake.load("/home/rcetin/workspace/programming/sdl/snake/src/snake.png", renderer)) {
         printf("load png is failed\n");
         goto bail;
     }
 
-    *rect = {10, 10, 100, 100};
+    while (!quit) {
+        while(SDL_PollEvent(&e)) {
+            if(e.type == SDL_QUIT) {
+                quit = true;
+            }
 
-    SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, tx, NULL, rect);
-    SDL_RenderPresent(renderer);
+            //Handle input for the dot
+            snake.handle_event(e);
+        }
 
-    SDL_Delay(3000);
+        //Move the dot
+
+        //Clear screen
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+        SDL_RenderClear(renderer);
+
+        snake.move(renderer);
+
+        //Update screen
+        SDL_RenderPresent(renderer);
+    }
 
     SDL_DestroyWindow(window);
     SDL_Quit();

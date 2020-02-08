@@ -1,6 +1,7 @@
 CC = g++
 OBJS = src/main.o src/snake/snake.o
-CFLAGS = -Wall
+CFLAGS = -Wall \
+	-std=c++11
 
 LINKER_FLAGS = -lSDL2 \
 	-lSDL2_image

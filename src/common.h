@@ -15,4 +15,18 @@
 #define FPS_DIV 20
 #define FPS_THR (FPS / FPS_DIV)
 
+enum game_state_e {
+    MAIN_MENU,
+    INIT_GAME,
+    PLAY,
+    OVER,
+
+    STATES_ALL
+};
+
+typedef void (*game_fx)(SDL_Renderer *);
+
+void init_game_states(game_fx *g);
+game_state_e get_game_state(void);
+
 #endif

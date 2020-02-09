@@ -2,32 +2,17 @@
 #include "../common.h"
 #include <string.h>
 
-csnake::csnake()
+csnake::csnake(SDL_Renderer *renderer)
 {
-    snake = ntexture();
     xpos = 0;
     ypos = 0;
     snake_w = DEFAULT_S_W;
     snake_h = DEFAULT_S_H;
-    keys[LEFT] = 0;
-    keys[RIGHT] = 1;
-    keys[UP] = 0;
-    keys[DOWN] = 0;
+    keys = S_RIGHT;
     move_cnt = 0;
-}
 
-csnake::csnake(int w, int h)
-{
-    snake = ntexture(w, h);
-    xpos = 0;
-    ypos = 0;
-    snake_w = w;
-    snake_h = h;
-    keys[LEFT] = 0;
-    keys[RIGHT] = 1;
-    keys[UP] = 0;
-    keys[DOWN] = 0;
-    move_cnt = 0;
+    sr = renderer;
+    snake = ntexture(snake_w, snake_h);
 }
 
 csnake::~csnake()
@@ -35,17 +20,18 @@ csnake::~csnake()
     snake.free();
 }
 
-int csnake::move(SDL_Renderer *renderer)
+int csnake::move()
 {
+    debug_values();
     if (++move_cnt < FPS_THR) {
         goto render;
     }
     move_cnt = 0;
 
-    xpos = (keys[RIGHT]) ? xpos + SNAKE_SPEED : xpos;
-    xpos = (keys[LEFT]) ? xpos - SNAKE_SPEED : xpos;
-    ypos = (keys[DOWN]) ? ypos + SNAKE_SPEED : ypos;
-    ypos = (keys[UP]) ? ypos - SNAKE_SPEED : ypos;
+    xpos = (keys & S_RIGHT) ? xpos + SNAKE_SPEED : xpos;
+    xpos = (keys & S_LEFT) ? xpos - SNAKE_SPEED : xpos;
+    ypos = (keys & S_DOWN) ? ypos + SNAKE_SPEED : ypos;
+    ypos = (keys & S_UP) ? ypos - SNAKE_SPEED : ypos;
 
     if (xpos + snake_w >= SCREEN_WIDTH) {
         xpos = SCREEN_WIDTH - snake_w;
@@ -64,50 +50,35 @@ int csnake::move(SDL_Renderer *renderer)
     }
 
 render:
-    return snake.render(renderer, xpos, ypos);
+    return snake.render(sr, xpos, ypos);
 }
 
-int csnake::load(std::string path, SDL_Renderer *renderer)
+int csnake::load(std::string path)
 {
-    return snake.load_image(path, renderer);
+    return snake.load_image(path, sr);
 }
 
 void csnake::handle_event( SDL_Event& e )
 {
-    // TODO: keys should be set using flags not one by one.
 	if(e.type == SDL_KEYDOWN) {
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP:
-                keys[UP] = 1;
-                keys[DOWN] = 0;
-                keys[RIGHT] = 0;
-                keys[LEFT] = 0;
-                break;
-            case SDLK_DOWN:
-                keys[DOWN] = 1;
-                keys[UP] = 0;
-                keys[RIGHT] = 0;
-                keys[LEFT] = 0;
-                break;
-            case SDLK_LEFT:
-                keys[LEFT] = 1;
-                keys[RIGHT] = 0;
-                keys[UP] = 0;
-                keys[DOWN] = 0;
-                break;
-            case SDLK_RIGHT:
-                keys[RIGHT] = 1;
-                keys[LEFT] = 0;
-                keys[UP] = 0;
-                keys[DOWN] = 0;
-                break;
+            case SDLK_UP: keys = S_UP; break;
+            case SDLK_DOWN: keys = S_DOWN; break;
+            case SDLK_LEFT: keys = S_LEFT; break;
+            case SDLK_RIGHT: keys = S_RIGHT; break;
         }
     }
 }
 
+void csnake::get_center_pos(int *x, int *y)
+{
+    *x = xpos + (snake_w / 2);
+    *y = ypos + (snake_h / 2);
+}
+
 void csnake::debug_values(void)
 {
-        printf("PRINT keys: L=%d, R=%d, U=%d, D=%d\n", keys[LEFT], keys[RIGHT], keys[UP], keys[DOWN]);
+        printf("PRINT keys: L=%d, R=%d, U=%d, D=%d\n", keys & S_LEFT, keys & S_RIGHT, keys & S_UP, keys & S_DOWN);
         printf("POS x=%d, y=%d\n", xpos, ypos);
 }

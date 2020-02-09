@@ -6,6 +6,7 @@
 #include <string>
 
 #include "snake/snake.h"
+#include "snake/food.h"
 #include "common.h"
 
 static int snake_init(SDL_Window **w, SDL_Renderer **r)
@@ -67,16 +68,24 @@ int main(void)
 {
     SDL_Window *window = NULL;
     SDL_Renderer* renderer = NULL;
-    csnake snake(20, 20);
     int quit = 0;
     SDL_Event e;
+    int snake_x, snake_y, food_x, food_y;
 
     if (snake_init(&window, &renderer)) {
         printf("error snake init\n");
-        goto bail;
+        return -1;
     }
 
-    if (snake.load("/home/rcetin/workspace/programming/sdl/snake/src/snake.png", renderer)) {
+    food f(renderer);
+    csnake snake(renderer);
+
+    if (f.load("/home/rcetin/workspace/programming/sdl/snake/src/banana.png")) {
+        printf("load png is failed\n");
+        goto bail;
+    }
+    
+    if (snake.load("/home/rcetin/workspace/programming/sdl/snake/src/snake.png")) {
         printf("load png is failed\n");
         goto bail;
     }
@@ -92,8 +101,15 @@ int main(void)
         //Clear screen
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(renderer);
-
-        snake.move(renderer);
+        
+        f.appear();
+        snake.move();
+        snake.get_center_pos(&snake_x, &snake_y);
+        f.get_center_pos(&food_x, &food_y);
+        if (food_x == snake_x && food_y == snake_y) {
+            printf("BOOOM!\n");
+            f.random();
+        }
 
         //Update screen
         SDL_RenderPresent(renderer);

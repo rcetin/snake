@@ -3,12 +3,10 @@
 
 #include "../texture/texture.h"
 
-#define DEFAULT_S_W 10
-#define DEFAULT_S_H 10
-#define SNAKE_SPEED 10
-#define FPS 60
-#define FPS_DIV 6
-#define FPS_THR (FPS / FPS_DIV)
+#define S_UP    (1 << 1)
+#define S_DOWN  (1 << 2)
+#define S_RIGHT (1 << 3)
+#define S_LEFT  (1 << 4)
 
 enum key_e{
     UP,
@@ -23,6 +21,7 @@ class csnake
 {
     private:
         ntexture snake;
+        SDL_Renderer *sr;
         int xpos;
         int ypos;
         int xvel;
@@ -31,16 +30,16 @@ class csnake
         int snake_w;
         int snake_h;
 
-        int keys[KEYS_ALL];
+        int keys;
 
         int move_cnt;
     public:
-        csnake();
-        csnake(int w, int h);
+        csnake(SDL_Renderer *renderer);
         ~csnake();
-        int move(SDL_Renderer *renderer);
-        int load(std::string path, SDL_Renderer *renderer);
+        int move();
+        int load(std::string path);
         void handle_event(SDL_Event& e);
+        void get_center_pos(int *x, int *y);
         void debug_values(void);
 };
 

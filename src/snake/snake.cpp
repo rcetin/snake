@@ -10,6 +10,7 @@ csnake::csnake(SDL_Renderer *renderer)
     snake_h = DEFAULT_S_H;
     keys = S_RIGHT;
     move_cnt = 0;
+    snake_block_cnt = 1;
 
     sr = renderer;
     snake = ntexture(snake_w, snake_h);
@@ -22,7 +23,8 @@ csnake::~csnake()
 
 int csnake::move()
 {
-    debug_values();
+    struct spos p;
+
     if (++move_cnt < FPS_THR) {
         goto render;
     }
@@ -33,6 +35,7 @@ int csnake::move()
     ypos = (keys & S_DOWN) ? ypos + SNAKE_SPEED : ypos;
     ypos = (keys & S_UP) ? ypos - SNAKE_SPEED : ypos;
 
+    // TODO: game over when snake crash to edges
     if (xpos + snake_w >= SCREEN_WIDTH) {
         xpos = SCREEN_WIDTH - snake_w;
     }
@@ -48,9 +51,23 @@ int csnake::move()
     if (ypos < 0) {
         ypos = 0;
     }
+    
+    p.xpos = xpos;
+    p.ypos = ypos;
+    pos.push_front(p);
+
+    if (pos.size() > snake_block_cnt) {
+        pos.pop_back();
+    }
 
 render:
-    return snake.render(sr, xpos, ypos);
+    for (std::list<spos>::iterator it=pos.begin(); it != pos.end(); ++it) {
+        if (snake.render(sr, it->xpos, it->ypos)) {
+            return -1;
+        }
+    }
+
+    return 0;
 }
 
 int csnake::load(std::string path)
@@ -77,8 +94,18 @@ void csnake::get_center_pos(int *x, int *y)
     *y = ypos + (snake_h / 2);
 }
 
+void csnake::feed(void)
+{
+    snake_block_cnt++;
+}
+
 void csnake::debug_values(void)
 {
-        printf("PRINT keys: L=%d, R=%d, U=%d, D=%d\n", keys & S_LEFT, keys & S_RIGHT, keys & S_UP, keys & S_DOWN);
-        printf("POS x=%d, y=%d\n", xpos, ypos);
+        // printf("PRINT keys: L=%d, R=%d, U=%d, D=%d\n", keys & S_LEFT, keys & S_RIGHT, keys & S_UP, keys & S_DOWN);
+        // printf("POS x=%d, y=%d\n", xpos, ypos);
+
+        printf("iterating pos list:\n");
+        for (std::list<spos>::iterator it=pos.begin(); it != pos.end(); ++it)
+            printf("LIST->xpos=%d, ypos=%d\n", it->xpos, it->ypos);
+
 }

@@ -108,6 +108,7 @@ int main(void)
         f.get_center_pos(&food_x, &food_y);
         if (food_x == snake_x && food_y == snake_y) {
             printf("BOOOM!\n");
+            snake.feed();
             f.random();
         }
 

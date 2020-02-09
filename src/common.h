@@ -24,9 +24,4 @@ enum game_state_e {
     STATES_ALL
 };
 
-typedef void (*game_fx)(SDL_Renderer *);
-
-void init_game_states(game_fx *g);
-game_state_e get_game_state(void);
-
 #endif

@@ -9,6 +9,7 @@ csnake::csnake(SDL_Renderer *renderer)
     snake_w = DEFAULT_S_W;
     snake_h = DEFAULT_S_H;
     keys = S_RIGHT;
+    current_key = S_RIGHT;
     move_cnt = 0;
     snake_block_cnt = 1;
 
@@ -75,16 +76,17 @@ int csnake::load(std::string path)
     return snake.load_image(path, sr);
 }
 
-void csnake::handle_event( SDL_Event& e )
+void csnake::handle_event(SDL_Event& e)
 {
 	if(e.type == SDL_KEYDOWN) {
         switch( e.key.keysym.sym )
         {
-            case SDLK_UP: keys = S_UP; break;
-            case SDLK_DOWN: keys = S_DOWN; break;
-            case SDLK_LEFT: keys = S_LEFT; break;
-            case SDLK_RIGHT: keys = S_RIGHT; break;
+            case SDLK_UP: if(current_key != S_DOWN) keys = S_UP; break;
+            case SDLK_DOWN: if(current_key != S_UP) keys = S_DOWN; break;
+            case SDLK_LEFT: if(current_key != S_RIGHT) keys = S_LEFT; break;
+            case SDLK_RIGHT: if(current_key != S_LEFT) keys = S_RIGHT; break;
         }
+        current_key = keys;
     }
 }
 

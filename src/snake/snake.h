@@ -28,9 +28,10 @@ class csnake
 
         int snake_w;
         int snake_h;
-        int snake_block_cnt;
+        uint32_t snake_block_cnt;
 
         int keys;
+        int current_key;
 
         int move_cnt;
     public:

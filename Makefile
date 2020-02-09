@@ -6,7 +6,8 @@ OBJS = src/main.o \
 	 src/menu/menu.o
 
 CFLAGS = -Wall \
-	-std=c++11
+	-std=c++11 \
+	-ggdb -O0 -g3
 
 LINKER_FLAGS = -lSDL2 \
 	-lSDL2_image \
@@ -15,10 +16,10 @@ LINKER_FLAGS = -lSDL2 \
 OBJ_NAME = snake
 
 %.o: %.cpp
-	g++ -c $< -o $@
+	g++ $(CFLAGS) -c $< -o $@
 
 all : $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+	$(CC) $(CFLAGS) -o $(OBJ_NAME) $(OBJS) $(LINKER_FLAGS)
 
 clean:
 	rm $(OBJ_NAME) $(OBJS)

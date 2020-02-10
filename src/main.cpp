@@ -111,8 +111,6 @@ static void game_main_menu_event_handle(SDL_Event& e)
 
 static void game_main_menu(SDL_Renderer *renderer)
 {
-    int ret;
-
     SDL_Color menu_title = {75, 188, 222, 255};
     if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Pacifico.ttf", 40)) {
         printf("set_font failed, line=%d\n", __LINE__);
@@ -130,8 +128,7 @@ static void game_main_menu(SDL_Renderer *renderer)
         printf("load_text failed, line=%d\n", __LINE__);
     }
     game_ctx.m->set_size(150, 70);
-    ret = game_ctx.m->put_element(SCREEN_WIDTH/2 - 75, 250 - 35, "play_button");
-    if (ret < 0) {
+    if (game_ctx.m->put_element(SCREEN_WIDTH/2 - 75, 250 - 35, "play_button") < 0) {
         printf("put_element failed, line=%d\n", __LINE__);
     }
     // game_state_change(INIT_GAME);
@@ -170,12 +167,26 @@ static void game_play(SDL_Renderer *renderer)
         game_ctx.snake->feed();
         game_ctx.f->random();
     }
+
+    if (snake_x >= SCREEN_WIDTH + DEFAULT_S_W/2 ||
+        snake_y >= SCREEN_HEIGHT + DEFAULT_S_H/2 ||
+        snake_x <= -DEFAULT_S_W/2 ||
+        snake_y <= -DEFAULT_S_H/2) {
+            printf("snake_x = %d, snake_y=%d\n", snake_x, snake_y);
+            current_state = OVER;
+    }
 }
 
 static void game_over(SDL_Renderer *renderer)
 {
-    delete game_ctx.f;
-    delete game_ctx.snake;
+    SDL_Color game_over = {169, 191, 21, 255};
+    if (game_ctx.m->load_text("GAME OVER", game_over)) {
+        printf("load_text failed, line=%d\n", __LINE__);
+    }
+    game_ctx.m->set_size(400, 200);
+    if (game_ctx.m->put_element(SCREEN_WIDTH/2 - 200, SCREEN_HEIGHT/2 - 100, "game_over")) {
+        printf("put_element failed, line=%d\n", __LINE__);
+    }
 }
 
 static void init_game_states(game_fx *g)

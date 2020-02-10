@@ -12,7 +12,7 @@
 #define DEFAULT_F_H DEFAULT_S_W
 
 #define FPS 60
-#define FPS_DIV 20
+#define FPS_DIV 10
 #define FPS_THR (FPS / FPS_DIV)
 
 enum game_state_e {

@@ -4,8 +4,8 @@
 
 csnake::csnake(SDL_Renderer *renderer)
 {
-    xpos = 0;
-    ypos = 0;
+    xpos = 50;
+    ypos = 50;
     snake_w = DEFAULT_S_W;
     snake_h = DEFAULT_S_H;
     keys = S_RIGHT;
@@ -37,21 +37,21 @@ int csnake::move(int force)
     ypos = (keys & S_UP) ? ypos - SNAKE_SPEED : ypos;
 
     // TODO: game over when snake crash to edges
-    if (xpos + snake_w >= SCREEN_WIDTH) {
-        xpos = SCREEN_WIDTH - snake_w;
-    }
+    // if (xpos + snake_w >= SCREEN_WIDTH) {
+    //     xpos = SCREEN_WIDTH - snake_w;
+    // }
 
-    if (xpos < 0) {
-        xpos = 0;
-    }
+    // if (xpos < 0) {
+    //     xpos = 0;
+    // }
 
-    if (ypos + snake_h >= SCREEN_HEIGHT) {
-        ypos = SCREEN_HEIGHT - snake_h;
-    }
+    // if (ypos + snake_h >= SCREEN_HEIGHT) {
+    //     ypos = SCREEN_HEIGHT - snake_h;
+    // }
 
-    if (ypos < 0) {
-        ypos = 0;
-    }
+    // if (ypos < 0) {
+    //     ypos = 0;
+    // }
     
     p.xpos = xpos;
     p.ypos = ypos;

@@ -37,6 +37,12 @@ int menu::load_text(std::string text, SDL_Color text_color)
 int menu::put_element(int x, int y, std::string elem_name)
 {
     struct menu_elem e;
+
+    for (std::list<menu_elem>::iterator it=elem_list.begin(); it != elem_list.end(); ++it) {
+        if (it->name == elem_name) {
+            goto render;
+        }
+    }
     e.x = x;
     e.y = y;
     e.w = current_elem_w;
@@ -45,6 +51,7 @@ int menu::put_element(int x, int y, std::string elem_name)
 
     elem_list.push_back(e);
 
+render:
     return mtexture.render(mr, x, y);
 }
 

@@ -56,7 +56,11 @@ int ntexture::load_image(std::string path, SDL_Renderer *renderer)
 
 int ntexture::set_font(const char *font_file, int pt_size)
 {
-    free();
+    if (font != NULL) {
+        TTF_CloseFont(font);
+        font = NULL;
+    }
+
     font = TTF_OpenFont(font_file, pt_size);
     if (font == NULL) {
         printf("open font failed for=%s, %s\n", font_file, TTF_GetError());
@@ -88,7 +92,6 @@ int ntexture::load_text(std::string text, SDL_Color text_color,
     return 0;
 
 bail:
-    free();
     return -1;
 }
 
@@ -103,8 +106,9 @@ int ntexture::render(SDL_Renderer *renderer, int x, int y, SDL_Rect* clip,
 		rect.h = clip->h;
 	}
 
-    if (SDL_RenderCopyEx(renderer, texture, clip, &rect, angle, center, flip)) {
-        printf("render texture is failed, %s\n", SDL_GetError());
+    int ret = SDL_RenderCopyEx(renderer, texture, clip, &rect, angle, center, flip);
+    if (ret < 0) {
+        printf("render texture is failed, %s, line=%d, ret=%d\n", SDL_GetError(), __LINE__, ret);
         return -1;
     }
     return 0;

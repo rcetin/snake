@@ -37,7 +37,7 @@ class csnake
     public:
         csnake(SDL_Renderer *renderer);
         ~csnake();
-        int move();
+        int move(int force);
         int load(std::string path);
         void handle_event(SDL_Event& e);
         void get_center_pos(int *x, int *y);

@@ -111,17 +111,29 @@ static void game_main_menu_event_handle(SDL_Event& e)
 
 static void game_main_menu(SDL_Renderer *renderer)
 {
+    int ret;
+
     SDL_Color menu_title = {75, 188, 222, 255};
-    game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Pacifico.ttf", 40);
-    game_ctx.m->load_text("Snake", menu_title);
+    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Pacifico.ttf", 40)) {
+        printf("set_font failed, line=%d\n", __LINE__);
+    }
+    if (game_ctx.m->load_text("Snake", menu_title)) {
+        printf("load_text failed, line=%d\n", __LINE__);
+    }
     game_ctx.m->set_size(300, 100);
-    game_ctx.m->put_element(SCREEN_WIDTH/2 - 150, 100 - 50, "title");
+    if (game_ctx.m->put_element(SCREEN_WIDTH/2 - 150, 100 - 50, "title") < 0) {
+        printf("put_element failed, line=%d\n", __LINE__);
+    }
 
     SDL_Color play_game = {169, 191, 21, 255};
-    game_ctx.m->load_text("Start game", play_game);
+    if (game_ctx.m->load_text("Start game", play_game)) {
+        printf("load_text failed, line=%d\n", __LINE__);
+    }
     game_ctx.m->set_size(150, 70);
-    game_ctx.m->put_element(SCREEN_WIDTH/2 - 75, 250 - 35, "play_button");
-
+    ret = game_ctx.m->put_element(SCREEN_WIDTH/2 - 75, 250 - 35, "play_button");
+    if (ret < 0) {
+        printf("put_element failed, line=%d\n", __LINE__);
+    }
     // game_state_change(INIT_GAME);
 }
 
@@ -151,11 +163,10 @@ static void game_play(SDL_Renderer *renderer)
     int snake_x, snake_y, food_x, food_y;
 
     game_ctx.f->appear();
-    game_ctx.snake->move();
+    game_ctx.snake->move(0);
     game_ctx.snake->get_center_pos(&snake_x, &snake_y);
     game_ctx.f->get_center_pos(&food_x, &food_y);
     if (food_x == snake_x && food_y == snake_y) {
-        printf("BOOOM!\n");
         game_ctx.snake->feed();
         game_ctx.f->random();
     }
@@ -202,6 +213,10 @@ int main(void)
                 quit = true;
             }
             game_ctx.snake->handle_event(e);
+            if (current_state == PLAY && e.type == SDL_KEYDOWN) {
+                game_ctx.snake->move(1);
+            }
+
             game_main_menu_event_handle(e);
         }
 

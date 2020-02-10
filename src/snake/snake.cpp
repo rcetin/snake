@@ -22,11 +22,11 @@ csnake::~csnake()
     snake.free();
 }
 
-int csnake::move()
+int csnake::move(int force)
 {
     struct spos p;
 
-    if (++move_cnt < FPS_THR) {
+    if (++move_cnt < FPS_THR && !force) {
         goto render;
     }
     move_cnt = 0;

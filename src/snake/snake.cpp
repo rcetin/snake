@@ -12,6 +12,7 @@ csnake::csnake(SDL_Renderer *renderer)
     current_key = S_RIGHT;
     move_cnt = 0;
     snake_block_cnt = 1;
+    fps_thr = FPS_THR;
 
     sr = renderer;
     snake = ntexture(snake_w, snake_h);
@@ -26,7 +27,7 @@ int csnake::move(int force)
 {
     struct spos p;
 
-    if (++move_cnt < FPS_THR && !force) {
+    if (++move_cnt < fps_thr && !force) {
         goto render;
     }
     move_cnt = 0;
@@ -36,23 +37,6 @@ int csnake::move(int force)
     ypos = (keys & S_DOWN) ? ypos + SNAKE_SPEED : ypos;
     ypos = (keys & S_UP) ? ypos - SNAKE_SPEED : ypos;
 
-    // TODO: game over when snake crash to edges
-    // if (xpos + snake_w >= SCREEN_WIDTH) {
-    //     xpos = SCREEN_WIDTH - snake_w;
-    // }
-
-    // if (xpos < 0) {
-    //     xpos = 0;
-    // }
-
-    // if (ypos + snake_h >= SCREEN_HEIGHT) {
-    //     ypos = SCREEN_HEIGHT - snake_h;
-    // }
-
-    // if (ypos < 0) {
-    //     ypos = 0;
-    // }
-    
     p.xpos = xpos;
     p.ypos = ypos;
     pos.push_front(p);
@@ -99,6 +83,10 @@ void csnake::get_center_pos(int *x, int *y)
 void csnake::feed(void)
 {
     snake_block_cnt++;
+    if (!(snake_block_cnt % 5) && fps_thr > 1) {
+        printf("speed increased\n");
+        fps_thr--;
+    }
 }
 
 void csnake::debug_values(void)

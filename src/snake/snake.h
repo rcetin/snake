@@ -22,8 +22,7 @@ class csnake
         SDL_Renderer *sr;
         int xpos;
         int ypos;
-        int xvel;
-        int yvel;
+        int fps_thr;
         std::list<spos> pos;
 
         int snake_w;

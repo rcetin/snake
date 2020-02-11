@@ -31,8 +31,10 @@ int food::appear()
 
 void food::random()
 {
-    xpos = (rand() % ((SCREEN_WIDTH - food_w) / 10)) * 10;
-    ypos = (rand() % ((SCREEN_HEIGHT - food_h) / 10)) * 10;
+    xpos = ((GAME_BORDEX_MXMAX + rand() % (GAME_BORDEX_XMAX - GAME_BORDEX_MXMAX)) / 10) * 10;
+    ypos = ((GAME_BORDEX_MYMAX + rand() % (GAME_BORDEX_YMAX - GAME_BORDEX_MYMAX)) / 10) * 10;
+
+    printf("x=%d, y=%d\n", xpos, ypos);    
 }
 
 void food::get_center_pos(int *x, int *y)

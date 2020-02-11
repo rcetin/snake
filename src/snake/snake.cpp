@@ -4,8 +4,8 @@
 
 csnake::csnake(SDL_Renderer *renderer)
 {
-    xpos = 50;
-    ypos = 50;
+    xpos = GAME_BORDEX_MXMAX + 50;
+    ypos = GAME_BORDEX_MYMAX + 50;
     snake_w = DEFAULT_S_W;
     snake_h = DEFAULT_S_H;
     keys = S_RIGHT;

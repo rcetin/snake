@@ -19,6 +19,7 @@ static struct {
     food *f;
     csnake *snake;
     menu *m;
+    int score;
 } game_ctx;
 
 static int snake_init(SDL_Window **w, SDL_Renderer **r)
@@ -109,20 +110,42 @@ static void game_main_menu_event_handle(SDL_Event& e)
 	}
 }
 
-static void game_main_menu(SDL_Renderer *renderer)
+static void render_snake_title(SDL_Renderer *renderer)
 {
     SDL_Color menu_title = {75, 188, 222, 255};
-    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Pacifico.ttf", 40)) {
+    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Roboto-Thin.ttf", 40)) {
         printf("set_font failed, line=%d\n", __LINE__);
     }
     if (game_ctx.m->load_text("Snake", menu_title)) {
         printf("load_text failed, line=%d\n", __LINE__);
     }
-    game_ctx.m->set_size(300, 100);
-    if (game_ctx.m->put_element(SCREEN_WIDTH/2 - 150, 100 - 50, "title") < 0) {
+    game_ctx.m->set_size(300, 70);
+    if (game_ctx.m->put_element(SCREEN_WIDTH/2 - 150, 25, "title") < 0) {
         printf("put_element failed, line=%d\n", __LINE__);
     }
+}
 
+static void render_score_title(SDL_Renderer *renderer)
+{
+    SDL_Color menu_title = {75, 188, 222, 255};
+    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Roboto-Thin.ttf", 20)) {
+        printf("set_font failed, line=%d\n", __LINE__);
+    }
+    if (game_ctx.m->load_text("Score", menu_title)) {
+        printf("load_text failed, line=%d\n", __LINE__);
+    }
+    game_ctx.m->set_size(80, 30);
+    if (game_ctx.m->put_element(SCREEN_WIDTH - 100, 25, "score") < 0) {
+        printf("put_element failed, line=%d\n", __LINE__);
+    }
+}
+
+static void game_main_menu(SDL_Renderer *renderer)
+{
+    render_snake_title(renderer);
+    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Pacifico.ttf", 20)) {
+        printf("set_font failed, line=%d\n", __LINE__);
+    }
     SDL_Color play_game = {169, 191, 21, 255};
     if (game_ctx.m->load_text("Start game", play_game)) {
         printf("load_text failed, line=%d\n", __LINE__);
@@ -137,6 +160,7 @@ static void game_main_menu(SDL_Renderer *renderer)
 static void game_init(SDL_Renderer *renderer)
 {
     // TODO: fx pointers should return integer not void!
+    game_ctx.score = 0;
 
     if (game_ctx.f->load("/home/rcetin/workspace/programming/sdl/snake/src/banana.png")) {
         printf("load png is failed\n");
@@ -155,6 +179,22 @@ bail:
     game_free();
 }
 
+static void update_score(SDL_Renderer *renderer)
+{
+    SDL_Color menu_title = {75, 188, 222, 255};
+    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Roboto-Thin.ttf", 15)) {
+        printf("set_font failed, line=%d\n", __LINE__);
+    }
+    if (game_ctx.m->load_text(std::to_string(game_ctx.score), menu_title)) {
+        printf("load_text failed, line=%d\n", __LINE__);
+    }
+    game_ctx.m->set_size(40, 30);
+    if (game_ctx.m->put_element(SCREEN_WIDTH - 75, 60, "score_int") < 0) {
+        printf("put_element failed, line=%d\n", __LINE__);
+    }
+
+}
+
 static void game_play(SDL_Renderer *renderer)
 {
     int snake_x, snake_y, food_x, food_y;
@@ -166,12 +206,13 @@ static void game_play(SDL_Renderer *renderer)
     if (food_x == snake_x && food_y == snake_y) {
         game_ctx.snake->feed();
         game_ctx.f->random();
+        game_ctx.score += 10;
     }
 
-    if (snake_x >= SCREEN_WIDTH + DEFAULT_S_W/2 ||
-        snake_y >= SCREEN_HEIGHT + DEFAULT_S_H/2 ||
-        snake_x <= -DEFAULT_S_W/2 ||
-        snake_y <= -DEFAULT_S_H/2) {
+    if (snake_x >= GAME_BORDEX_XMAX ||
+        snake_y >= GAME_BORDEX_YMAX ||
+        snake_x <= GAME_BORDEX_MXMAX ||
+        snake_y <= GAME_BORDEX_MYMAX) {
             printf("snake_x = %d, snake_y=%d\n", snake_x, snake_y);
             current_state = OVER;
     }
@@ -203,6 +244,15 @@ int main(void)
     SDL_Renderer* renderer = NULL;
     int quit = 0;
     SDL_Event e;
+    SDL_Rect outer_rect = {10,
+            10,
+            SCREEN_WIDTH - 20,
+            SCREEN_HEIGHT - 20};
+    SDL_Rect game_rect = {10,   // -xmax
+            100,    // -ymax
+            SCREEN_WIDTH - 20,  // 600 xmax
+            SCREEN_HEIGHT - 110};   // 360 ymax
+
 
     if (snake_init(&window, &renderer)) {
         printf("error snake init\n");
@@ -235,6 +285,14 @@ int main(void)
         SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
         SDL_RenderClear(renderer);
         
+        render_snake_title(renderer);
+        render_score_title(renderer);
+        update_score(renderer);
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF); 
+        SDL_RenderDrawRect(renderer, &outer_rect);
+        SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0x00, 0xFF); 
+        SDL_RenderDrawRect(renderer, &game_rect);
+
         game_fx_array[current_state](renderer);
 
         //Update screen

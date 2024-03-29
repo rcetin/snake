@@ -113,7 +113,7 @@ static void game_main_menu_event_handle(SDL_Event& e)
 static void render_snake_title(SDL_Renderer *renderer)
 {
     SDL_Color menu_title = {75, 188, 222, 255};
-    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Roboto-Thin.ttf", 40)) {
+    if (game_ctx.m->set_font("./src/fonts/Roboto-Thin.ttf", 40)) {
         printf("set_font failed, line=%d\n", __LINE__);
     }
     if (game_ctx.m->load_text("Snake", menu_title)) {
@@ -128,7 +128,7 @@ static void render_snake_title(SDL_Renderer *renderer)
 static void render_score_title(SDL_Renderer *renderer)
 {
     SDL_Color menu_title = {75, 188, 222, 255};
-    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Roboto-Thin.ttf", 20)) {
+    if (game_ctx.m->set_font("./src/fonts/Roboto-Thin.ttf", 20)) {
         printf("set_font failed, line=%d\n", __LINE__);
     }
     if (game_ctx.m->load_text("Score", menu_title)) {
@@ -143,7 +143,7 @@ static void render_score_title(SDL_Renderer *renderer)
 static void game_main_menu(SDL_Renderer *renderer)
 {
     render_snake_title(renderer);
-    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Pacifico.ttf", 20)) {
+    if (game_ctx.m->set_font("./src/fonts/Pacifico.ttf", 20)) {
         printf("set_font failed, line=%d\n", __LINE__);
     }
     SDL_Color play_game = {169, 191, 21, 255};
@@ -162,12 +162,12 @@ static void game_init(SDL_Renderer *renderer)
     // TODO: fx pointers should return integer not void!
     game_ctx.score = 0;
 
-    if (game_ctx.f->load("/home/rcetin/workspace/programming/sdl/snake/src/banana.png")) {
+    if (game_ctx.f->load("./src/images/banana.png")) {
         printf("load png is failed\n");
         goto bail;
     }
     
-    if (game_ctx.snake->load("/home/rcetin/workspace/programming/sdl/snake/src/snake.png")) {
+    if (game_ctx.snake->load("./src/images/snake.png")) {
         printf("load png is failed\n");
         goto bail;
     }
@@ -182,7 +182,7 @@ bail:
 static void update_score(SDL_Renderer *renderer)
 {
     SDL_Color menu_title = {75, 188, 222, 255};
-    if (game_ctx.m->set_font("/home/rcetin/workspace/programming/sdl/snake/src/fonts/Roboto-Thin.ttf", 15)) {
+    if (game_ctx.m->set_font("./src/fonts/Roboto-Thin.ttf", 15)) {
         printf("set_font failed, line=%d\n", __LINE__);
     }
     if (game_ctx.m->load_text(std::to_string(game_ctx.score), menu_title)) {
